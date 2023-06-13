@@ -1,0 +1,21 @@
+{
+  "name": "nodecli-special-for-serverlessteam",
+  "version": "1.0.0",
+  "description": "interactive sort cli app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "serverless",
+    "nodejs",
+    "cli",
+    "js",
+    "best"
+  ],
+  "author": "Nazar Hulymchuk",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

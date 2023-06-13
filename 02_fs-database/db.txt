@@ -1,0 +1,5 @@
+{"user":"user1","gender":"male","age":"22"}
+{"user":"user2","gender":"female","age":"18"}
+{"user":"user3","gender":"male","age":"40"}
+{"user":"SOMEUSER","gender":"male","age":"23"}
+{"user":"USER2","gender":"female","age":"55"}

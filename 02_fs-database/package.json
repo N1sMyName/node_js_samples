@@ -1,0 +1,16 @@
+{
+  "name": "node_cli_database",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Nazar Hulymchuk",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^9.2.7"
+  }
+}

@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "preprun": "./install-node-modules-g.sh",
-    "start": "./start.sh"
+    "start": "scripts/start.sh"
   },
   "keywords": [],
   "author": "",

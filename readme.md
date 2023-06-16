@@ -20,6 +20,7 @@ Follow instructions
 
 <ul>
 <li>OPEN_WEATHER_TOKEN(task 5 only)</li>
-<li>TELEGRAM_T0KEN(task 3-5 only)</li>
-<li>CHAT_ID(task 3-5 only)</li>
+<li>TELEGRAM_T0KEN(task 3-5)</li>
+<li>CHAT_ID(task 3-5)</li>
+ <li>CITY(optional task 4 )</li>
 </ul>

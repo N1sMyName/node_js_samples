@@ -2,7 +2,6 @@
 
 ![image info](mem2.jpg)
 
-HOW TO USE?
 <br/>
 <ul>
 <li>

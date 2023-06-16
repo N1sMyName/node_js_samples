@@ -5,9 +5,9 @@ let result;
 // clear node start info
 console.clear()
 // handle exit
-IO.onExit()
+IO.onExitLogger()
 
-const checkData = (input) => {
+const checkInputValidity = (input) => {
     if (process.env.INPUT) return
 
     try {
@@ -27,8 +27,8 @@ const start = () => {
     IO.stdinOnData((buffer) => {
         // transform buffer to string and remove new line
         const input = buffer.toString().replace('\n', '')
-        checkData(input)
-        IO.checkExit(input)
+        checkInputValidity(input)
+        IO.checkExitCondition(input)
     })
 }
 

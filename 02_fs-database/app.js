@@ -20,6 +20,7 @@ const askQuestions = () => {
 
 const askForSearch = () => {
     inquirer.prompt(getQuestions, (answers => answers)).then(answers => {
+        console.log(`answer ${answers}`)
         if (answers.getRequest === 'no') {
             console.log(`bye)`)
             process.exit()

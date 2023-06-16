@@ -7,12 +7,12 @@ class Result {
         process.env.INPUT = input;
         this.input = input
         this.sortActionsMap = this.createActionMap(options)
-        this.menu()
+        this.showMainMenu()
     }
 
-    menu() {
+    showMainMenu() {
         this.displayOptions()
-        console.log(`How would you like to sort values?(option number)`);
+        console.log(`How would you like to sort values?(option number):`);
         IO.stdinOnData((buffer) => {
             const option = buffer.toString()
             try {
@@ -22,7 +22,7 @@ class Result {
             } catch (err) {
                 console.clear()
                 IO.stdoutWrite(err.message)
-                this.menu()
+                this.showMainMenu()
 
             }
         })
@@ -36,11 +36,9 @@ class Result {
         // filter out falsy values
         sortResult = sortResult.filter(Boolean)
         // display menu again
-        this.displayOptions()
         // format output
-        IO.stdoutWrite(sortResult.length ? `\nOutput: \n${JSON.stringify(sortResult, null, 3)}\n` : "Output is empty for provided filer...\n")
-
-
+        IO.stdoutWrite(sortResult.length ? `\nOutput: \n${JSON.stringify(sortResult, null, 3)}\n` : "Output is empty for provided filer...\n\n")
+        this.showMainMenu()
     }
 
     displayOptions() {

@@ -1,19 +1,9 @@
-const {newLine} = require('./constants')
 
-const handleInvalidInputs = (input) => {
-    // check if only enter was pressed
-    isSingleEnter(input)
-    // check if only spaces entered
+const inputErrorHandler = (input) => {
     isSpacesOnly(input)
-    // refuse low length input
     isShortLength(input)
 }
 
-const isSingleEnter = (input) => {
-    if (input.length === 1 && newLine.test(input)) {
-        throw new Error(`Enter at least some think: `)
-    }
-}
 const isSpacesOnly = (input) => {
     const isSpacesOnly = input.split('').every(letter => letter === ' ' || letter === '\n');
     if (isSpacesOnly) {
@@ -23,12 +13,8 @@ const isSpacesOnly = (input) => {
 
 const isShortLength = (input) => {
     if (input.split(' ').length < 3) {
-        throw new Error(`Provide at least three words or numbers: `)
+        throw new Error(`Provide at least three words or numbers separated by spaces: `)
     }
 }
 
-const handleInvalidOptions = (option) => {
-    if (!option) throw new Error(`Invalid input, you insert ${option}, try number instead...\n To exit type /exit`);
-}
-
-module.exports = {handleInvalidInputs}
+module.exports = {handleInvalidInputs: inputErrorHandler}

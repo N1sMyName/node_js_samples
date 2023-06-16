@@ -6,10 +6,10 @@ const IONodeWrapper = {
     stdoutWrite(string) {
         process.stdout.write(string)
     },
-    onExit() {
+    onExitLogger() {
         process.on('exit', () => console.log(`Bye)`))
     },
-    checkExit(input) {
+    checkExitCondition(input) {
         if (input === '/exit') {
             console.clear()
 

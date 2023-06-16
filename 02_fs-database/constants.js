@@ -29,6 +29,6 @@ export const getQuestions = [
         type: 'input',
         message: "Enter user's name you want find in DB: ",
         name: 'name',
-        when: (answers) => !!answers.getRequest
+        when: (answers) => answers.getRequest !== 'no'
     }
 ]

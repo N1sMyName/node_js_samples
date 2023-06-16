@@ -1,10 +1,10 @@
 const axios = require('axios')
 const queryString = require('querystring')
-const {formatDate, formatForecastOutput, parseArrayIntoTelegramOutput} = require('./utils')
+const {formatDate, getForecastLines, parseArrayIntoTelegramOutput} = require('./utils')
 const {bot, showStartMenu} = require('./telegram-utils')
 const baseUrl = 'https://api.openweathermap.org'
 
-const getCoordinatesByCity = async (city = 'Lviv') => {
+const getCoordinatesByCity = async (city = process.env.CITY || 'Lviv') => {
     const params = queryString.stringify({
         q: city,
         limit: 1,
@@ -39,11 +39,19 @@ const filterForecast = async (interval, city = "Lviv") => {
     const forecast = await getForecast(city)
     const result = []
     const forecastList = forecast.data.list
-    for (let i = 0; i < forecastList.length; i += (interval / 3)) {
-        const forecastItem = forecastList[i]
+    for (let index = 0; index < forecastList.length; index += (interval / 3)) {
+
+        const forecastItem = forecastList[index]
         if (!forecastItem) return
+
+        const i = index + (interval / 3)
+        const nextForecast = forecastList[i]
+        const isNewDay = nextForecast ? (nextForecast.dt_txt.split(' ')[0] > forecastItem.dt_txt.split(' ')[0]) : false
+
         const date = formatDate(new Date(forecastItem.dt_txt))
-        result.push(formatForecastOutput(forecastItem, date, i))
+        const newDayDateLine = !index || isNewDay ? `\n${date}\n` : '';
+        result.push(newDayDateLine + getForecastLines(forecastItem, date, index))
+
     }
     return result
 }
@@ -62,7 +70,10 @@ const weatherHandler = (msg) => {
             .then(forecast => {
                 bot.sendMessage(process.env.CHAT_ID, parseArrayIntoTelegramOutput(forecast))
             })
-            .catch(() => bot.sendMessage(process.env.CHAT_ID, `Sorry,no forecast available.`))
+            .catch((err) => {
+                console.log(err.message)
+                bot.sendMessage(process.env.CHAT_ID, `Sorry,no forecast available.`)
+            })
     }
 
     if (msg.text.toString().toLowerCase().includes('6 hrs')) {
@@ -70,7 +81,10 @@ const weatherHandler = (msg) => {
             .then(forecast => {
                 bot.sendMessage(process.env.CHAT_ID, parseArrayIntoTelegramOutput(forecast))
             })
-            .catch(() => bot.sendMessage(process.env.CHAT_ID, `Sorry,no forecast available.`))
+            .catch((err) => {
+                console.log(err.message)
+                bot.sendMessage(process.env.CHAT_ID, `Sorry,no forecast available.`)
+            })
     }
 
     if (msg.text.toString().toLowerCase().includes('back')) {

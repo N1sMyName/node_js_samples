@@ -20,7 +20,6 @@ const askQuestions = () => {
 
 const askForSearch = () => {
     inquirer.prompt(getQuestions, (answers => answers)).then(answers => {
-        console.log(`answer ${answers}`)
         if (answers.getRequest === 'no') {
             console.log(`bye)`)
             process.exit()
@@ -37,7 +36,7 @@ const askForSearch = () => {
                 return item.user.toLowerCase().trim() === answers.name.toLowerCase().trim()
             })
 
-            console.log(user ? user : "No user with such name")
+            console.log(user ? user : "No entry with such name")
             process.exit(0)
         })
     })

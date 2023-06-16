@@ -12,15 +12,17 @@ const eurMonoCurrencyCodeA = 978
 const getMono = async (currency) => {
     const monoCache = cache.get(`mono-${currency}`)
     if (monoCache) {
-        console.group(`mono cache`)
         return `Buy=${monoCache.rateBuy}\nSell=${monoCache.rateSell}\nCached`
     }
-    const response = await axios.get(monoBankPublic)
-
-    const currencyData = await response.data.find(item => item.currencyCodeA === ((currency === 'usd') ? usdMonoCurrencyCodeA : eurMonoCurrencyCodeA))
-    cache.set(`mono-${currency}`, currencyData, 61)
-    console.group('call')
-    return `Buy=${currencyData.rateBuy}\nSell=${currencyData.rateSell}\n`
+    try {
+        const response = await axios.get(monoBankPublic)
+        const currencyData = await response.data.find(item => item.currencyCodeA === ((currency === 'usd') ? usdMonoCurrencyCodeA : eurMonoCurrencyCodeA))
+        cache.set(`mono-${currency}`, currencyData, 61)
+        return `Buy=${currencyData.rateBuy}\nSell=${currencyData.rateSell}\n`
+    } catch (e) {
+        console.log(e)
+        return 'Sorry, service currently unavailable, try again in 1 minute.'
+    }
 
 }
 const getPrivat = async (currency) => {
@@ -32,7 +34,7 @@ const getPrivat = async (currency) => {
     const res = await axios.get(privatBankPublic)
     const currencyData = await res.data.find(currencyData => currencyData.ccy.toLowerCase() === currency)
     cache.set(`privat-${currency}`, currencyData, 61)
-    return `Buy=${currencyData.buy}\nSell=${currencyData.sale}\nCached`
+    return `Buy=${currencyData.buy}\nSell=${currencyData.sale}\n`
 }
 const getBankCurrency = async (bank, currency) => {
     if (bank === 'privat') {

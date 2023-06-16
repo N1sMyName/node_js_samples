@@ -8,7 +8,6 @@ program
     .description('CLI to send telegram messages throw API')
     .opts()
 
-console.log(program.options)
 
 program.command('send-message')
     .description("Sends text message to telegram chat.")

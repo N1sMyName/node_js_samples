@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 PS3="Select task number: "
-select task in "sort_cli" "fs_database" "telegram_mail" "weather_exchange_bot" ; do
+select task in "sort_cli" "fs_database" "telegram_mail" "weather_bot" "exchange_bot" "instagram_giveaway"; do
   PATH_TO_FILE=$(find . -type d -name "*$REPLY\_*")
   clear
   if [ $REPLY -eq 3 ]; then

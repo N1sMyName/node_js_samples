@@ -1,5 +1,6 @@
 const endpoints = require('./endpoints')
 const axios = require("axios")
+const result = {true: 0, false: 0}
 
 
 const processRetryCall = async (promise, retryCount) => {
@@ -20,14 +21,17 @@ const processApiCall = async (promise) => {
     let isDone
     if (Object.hasOwn(response.data, 'isDone')) {
         isDone = response.data.isDone
+        result[isDone]++
         return `[Success] ${response.request.protocol}${response.request.path}$ ${isDone}`
     } else {
         isDone = findIsDoneRecursively(response.data)
         if (isDone === undefined) {
-            await new Promise(((resolve, reject) => setTimeout(() => {
+            await new Promise(((_, reject) => setTimeout(() => {
                 reject(new Error(`[Fail] ${response.request.protocol}${response.request.path}$`))
             }, 2500)))
+
         }
+        result[isDone]++
         return `[Success] ${response.request.protocol}${response.request.path}$ ${isDone}`
     }
 }
@@ -42,12 +46,18 @@ function findIsDoneRecursively(object) {
 const start = async () => {
     const promises = endpoints.map(endpoint => axios.get(endpoint))
 
-    for (const promise of promises) {
+    for await (const promise of promises) {
         let counter = 0
-        processRetryCall(promise, counter).then()
+        await processRetryCall(promise, counter)
     }
 }
 
-start().then()
+start().then(() => {
+        setTimeout(() => {
+                console.log(result)
+            }, 3000
+        )
+    }
+)
 
 

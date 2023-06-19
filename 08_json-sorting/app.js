@@ -1,53 +1,53 @@
 const endpoints = require('./endpoints')
 const axios = require("axios")
-const getData = async () => {
-    const promises = endpoints.map((endpoint) => axios.get(endpoint))
-    for await (let promise of promises) {
-        let isDone
-        if (Object.hasOwn(promise.data, 'isDone')) {
-            isDone = promise.data.isDone
-            console.log(`[Success] ${promise.request.protocol}${promise.request.path}$ ${isDone}`)
 
-        } else {
-            isDone = findRecursively(promise.data)
-            if (isDone === undefined) {
-                continue
-            }
-            console.log(`[Success] ${promise.request.protocol}${promise.request.path}$ ${isDone}`)
+
+const processRetryCall = async (promise, retryCount) => {
+    processApiCall(promise)
+        .then((successMessage) => console.log(successMessage))
+        .catch(error => {
+            console.log(error.message)
+
+            if (retryCount === 3) return
+            retryCount++
+            console.log(`Retry...${retryCount}`)
+
+            processRetryCall(promise, retryCount)
+        })
+}
+const processApiCall = async (promise) => {
+    const response = await promise
+    let isDone
+    if (Object.hasOwn(response.data, 'isDone')) {
+        isDone = response.data.isDone
+        return `[Success] ${response.request.protocol}${response.request.path}$ ${isDone}`
+    } else {
+        isDone = findIsDoneRecursively(response.data)
+        if (isDone === undefined) {
+            await new Promise(((resolve, reject) => setTimeout(() => {
+                reject(new Error(`[Fail] ${response.request.protocol}${response.request.path}$`))
+            }, 2500)))
         }
-
+        return `[Success] ${response.request.protocol}${response.request.path}$ ${isDone}`
     }
 }
 
-getData().then()
-// getData().then((data) => {
-
-// data.forEach((res) => {
-//         let isDone
-//         if (Object.hasOwn(res.data, 'isDone')) {
-//             isDone = res.data.isDone
-//             console.log(`[Success] ${res.request.protocol}${res.request.path}$ ${isDone}`)
-//
-//         } else {
-//             isDone = findRecursively(res.data)
-//             if (isDone === undefined) {
-//                 return
-//             }
-//             console.log(`[Success] ${res.request.protocol}${res.request.path}$ ${isDone}`)
-//         }
-//     }
-// )
-//     }
-// )
-
-
-function findRecursively(object) {
+function findIsDoneRecursively(object) {
     for (const key in object) {
-        if (key === 'isDone') {
-            return object[key]
-        }
-        if (typeof object[key] === 'object') {
-            return findRecursively(object[key])
-        }
+        if (key === 'isDone') return object[key]
+        if (typeof object[key] === 'object') return findIsDoneRecursively(object[key])
     }
 }
+
+const start = async () => {
+    const promises = endpoints.map(endpoint => axios.get(endpoint))
+
+    for (const promise of promises) {
+        let counter = 0
+        processRetryCall(promise, counter).then()
+    }
+}
+
+start().then()
+
+
